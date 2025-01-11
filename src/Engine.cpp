@@ -5,9 +5,9 @@
 // Global engine
 Engine kEngine;
 
-Engine::Engine() : _fovRadius(10), _computeFov(true) {
-    TCODConsole::initRoot(80, 50, "libtcod C++ tutorial", false);
-    _player = new Actor(40, 25, '@', TCODColor::white);
+Engine::Engine() : _fovRadius(10), _gameStatus(GameStatus::STARTUP) {
+    TCODConsole::initRoot(80, 50, "Roguelike!", false);
+    _player = new Actor(40, 25, '@', "player", TCODColor::white);
     _actors.push(_player);
     _map = new Map(80, 45);
     _map->ComputeFov();
@@ -20,46 +20,42 @@ Engine::~Engine() {
 
 void Engine::Update() {
     TCOD_key_t key;
+    if (_gameStatus == STARTUP) _map->ComputeFov();
+    _gameStatus = IDLE;
+
     TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL);
 
-    auto& coordinates = _player->_coordinates;
+    int dx = 0, dy = 0;
     switch (key.vk) {
-    case TCODK_UP:
-        if (!_map->IsWall(coordinates._x, coordinates._y - 1)) {
-            _player->Move(TCODK_UP, 1);
-        }
-        break;
-    case TCODK_DOWN:
-        if (!_map->IsWall(coordinates._x, coordinates._y + 1)) {
-            _player->Move(TCODK_DOWN, 1);
-        }
-        break;
-    case TCODK_LEFT:
-        if (!_map->IsWall(coordinates._x - 1, coordinates._y)) {
-            _player->Move(TCODK_LEFT, 1);
-        }
-        break;
-    case TCODK_RIGHT:
-        if (!_map->IsWall(coordinates._x + 1, coordinates._y)) {
-            _player->Move(TCODK_RIGHT, 1);
-        }
-        break;
-    default:
-        _computeFov = true;
-        break;
+        case TCODK_UP: dy = -1; break;
+        case TCODK_DOWN: dy = 1; break;
+        case TCODK_LEFT: dx = -1; break;
+        case TCODK_RIGHT: dx = 1; break;
+        default:break;
     }
 
-    if (_computeFov) {
-        _map->ComputeFov();
-        _computeFov = false;
+    if (dx != 0 || dy != 0) {
+        _gameStatus = NEW_TURN;
+        if (_player->MoveOrAttack(dx, dy)) {
+            _map->ComputeFov();
+        }
+    }
+
+    if (_gameStatus == NEW_TURN) {
+        for (auto actor : _actors) {
+            if (actor != _player && _map->IsInFov(actor)) {
+                actor->Update();
+            }
+        }
     }
 }
 
 void Engine::Render() {
     TCODConsole::root->clear();
-    // draw the map
+
+    // Draw map
     _map->Render();
-    // draw the actors
+
     for (auto actor : _actors) {
         if (_map->IsInFov(actor->_coordinates._x, actor->_coordinates._y)) {
             actor->Render();

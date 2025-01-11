@@ -4,6 +4,7 @@
 
 static const int ROOM_MAX_SIZE = 12;
 static const int ROOM_MIN_SIZE = 6;
+static const int MAX_ROOM_MONSTERS = 3;
 
 class BspListener : public ITCODBspCallback {
 private:
@@ -95,9 +96,40 @@ bool Map::IsInFov(int x, int y) const {
     return false;
 }
 
+bool Map::IsInFov(Actor* actor) const {
+    return IsInFov(actor->_coordinates._x, actor->_coordinates._y);
+}
+
 void Map::ComputeFov() {
-    _map->computeFov(kEngine._player->_coordinates._x, kEngine._player->_coordinates._y,
-        kEngine._fovRadius);
+    _map->computeFov(kEngine._player->_coordinates._x, kEngine._player->_coordinates._y, kEngine._fovRadius);
+}
+
+bool Map::CanWalk(int x, int y) const {
+    if (IsWall(x, y)) {
+        return false;
+    }
+
+    for (auto actor : kEngine._actors) {
+        if (actor->_coordinates._x == x && actor->_coordinates._y == y) {
+            // there is an actor there. cannot walk
+            return false;
+        }
+    }
+    return true;
+}
+
+void Map::AddMonster(int x, int y) {
+    TCODRandom* rng = TCODRandom::getInstance();
+    if (rng->getInt(0, 100) < 80) {
+        // create an orc
+        kEngine._actors.push(new Actor(x, y, 'O', "orc",
+            TCODColor::desaturatedGreen));
+    }
+    else {
+        // create a troll
+        kEngine._actors.push(new Actor(x, y, 'T', "troll",
+            TCODColor::darkerGreen));
+    }
 }
 
 void Map::Dig(int x1, int y1, int x2, int y2) {
@@ -124,9 +156,14 @@ void Map::CreateRoom(int room_number, int x1, int y1, int x2, int y2) {
     }
     else {
         TCODRandom* rng = TCODRandom::getInstance();
-        if (rng->getInt(0, 3) == 0) {
-            kEngine._actors.push(new Actor((x1 + x2) / 2, (y1 + y2) / 2, '@',
-                TCODColor::yellow));
+        int nbMonsters = rng->getInt(0, MAX_ROOM_MONSTERS);
+        while (nbMonsters > 0) {
+            int x = rng->getInt(x1, x2);
+            int y = rng->getInt(y1, y2);
+            if (CanWalk(x, y)) {
+                AddMonster(x, y);
+            }
+            nbMonsters--;
         }
     }
 }

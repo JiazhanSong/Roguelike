@@ -6,18 +6,24 @@ class Map;
 
 class Engine {
 public:
+    enum GameStatus {
+        STARTUP,
+        IDLE,
+        NEW_TURN,
+        VICTORY,
+        DEFEAT
+    };
+
     TCODList<Actor*> _actors;
     Actor* _player;
     Map* _map;
     int _fovRadius;
+    GameStatus _gameStatus;
 
     Engine();
     ~Engine();
     void Update();
     void Render();
-
-private:
-    bool _computeFov;
 };
 
 extern Engine kEngine;

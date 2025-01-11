@@ -40,10 +40,22 @@ public:
         _coordinates = Coordinates(default_x, default_y);
     }
 
+    Actor(int x, int y, int ch, const char* name, const TCODColor& color)
+    {
+        _coordinates = Coordinates(x, y);
+        _ch = ch;
+        _color = color;
+        _name = name;
+    }
+
+    void Update();
+    bool MoveOrAttack(int x_delta, int y_delta);
+
     void Move(TCOD_keycode_t direction, unsigned int delta);
     void Render() const;
 
     Coordinates _coordinates;
     int _ch; // ascii code
     TCODColor _color;
+    std::string _name;
 };

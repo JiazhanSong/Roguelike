@@ -1,9 +1,11 @@
 #pragma once
 #include "precompiled_header.h"
 
+class Actor;
+
 struct Tile {
-    bool _explored; // has the player already seen this tile
     Tile() : _explored(false) {}
+    bool _explored; // has the player already seen this tile
 };
 
 class Map {
@@ -14,9 +16,12 @@ public:
     ~Map();
     bool IsWall(int x, int y) const;
     bool IsInFov(int x, int y) const;
+    bool IsInFov(Actor* actor) const;
     bool IsExplored(int x, int y) const;
     void ComputeFov();
     void Render() const;
+    bool CanWalk(int x, int y) const;
+    void AddMonster(int x, int y);
 protected:
     TCODMap* _map;
     Tile* _tiles;
