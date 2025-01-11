@@ -5,11 +5,12 @@
 // Global engine
 Engine kEngine;
 
-Engine::Engine() {
+Engine::Engine() : _fovRadius(10), _computeFov(true) {
     TCODConsole::initRoot(80, 50, "libtcod C++ tutorial", false);
     _player = new Actor(40, 25, '@', TCODColor::white);
     _actors.push(_player);
     _map = new Map(80, 45);
+    _map->ComputeFov();
 }
 
 Engine::~Engine() {
@@ -43,7 +44,14 @@ void Engine::Update() {
             _player->Move(TCODK_RIGHT, 1);
         }
         break;
-    default:break;
+    default:
+        _computeFov = true;
+        break;
+    }
+
+    if (_computeFov) {
+        _map->ComputeFov();
+        _computeFov = false;
     }
 }
 
@@ -53,6 +61,8 @@ void Engine::Render() {
     _map->Render();
     // draw the actors
     for (auto actor : _actors) {
-        actor->Render();
+        if (_map->IsInFov(actor->_coordinates._x, actor->_coordinates._y)) {
+            actor->Render();
+        }
     }
 }

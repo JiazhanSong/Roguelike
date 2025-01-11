@@ -43,6 +43,7 @@ public:
 
 Map::Map(int width, int height) : _width(width), _height(height) {
     _tiles = new Tile[width * height];
+    _map = new TCODMap(width, height);
 
     // Room tree
     TCODBsp bsp(0, 0, width, height);
@@ -55,26 +56,48 @@ Map::Map(int width, int height) : _width(width), _height(height) {
 
 Map::~Map() {
     delete[] _tiles;
+    delete _map;
 }
 
 bool Map::IsWall(int x, int y) const {
-    return !_tiles[x + y * _width]._canWalk;
+    return !_map->isWalkable(x, y);
 }
 
-void Map::SetWall(int x, int y) {
-    _tiles[x + y * _width]._canWalk = false;
+bool Map::IsExplored(int x, int y) const {
+    return _tiles[x + y * _width]._explored;
 }
 
 void Map::Render() const {
     static const TCODColor darkWall(0, 0, 100);
     static const TCODColor darkGround(50, 50, 150);
+    static const TCODColor lightWall(130, 110, 50);
+    static const TCODColor lightGround(200, 180, 50);
 
     for (int x = 0; x < _width; x++) {
         for (int y = 0; y < _height; y++) {
-            TCODConsole::root->setCharBackground(x, y,
-                IsWall(x, y) ? darkWall : darkGround);
+            if (IsInFov(x, y)) {
+                TCODConsole::root->setCharBackground(x, y,
+                    IsWall(x, y) ? lightWall : lightGround);
+            }
+            else if (IsExplored(x, y)) {
+                TCODConsole::root->setCharBackground(x, y,
+                    IsWall(x, y) ? darkWall : darkGround);
+            }
         }
     }
+}
+
+bool Map::IsInFov(int x, int y) const {
+    if (_map->isInFov(x, y)) {
+        _tiles[x + y * _width]._explored = true;
+        return true;
+    }
+    return false;
+}
+
+void Map::ComputeFov() {
+    _map->computeFov(kEngine._player->_coordinates._x, kEngine._player->_coordinates._y,
+        kEngine._fovRadius);
 }
 
 void Map::Dig(int x1, int y1, int x2, int y2) {
@@ -86,7 +109,7 @@ void Map::Dig(int x1, int y1, int x2, int y2) {
     }
     for (int tile_x = x1; tile_x <= x2; tile_x++) {
         for (int tile_y = y1; tile_y <= y2; tile_y++) {
-            _tiles[tile_x + tile_y * _width]._canWalk = true;
+            _map->setProperties(tile_x, tile_y, true, true);
         }
     }
 }
