@@ -8,6 +8,7 @@ class Actor
 
     class Coordinates
     {
+    public:
         friend Actor;
         Coordinates() {
             _x = 0;
@@ -22,10 +23,6 @@ class Actor
 
         int _x;
         int _y;
-
-    public:
-        int GetX() { return _x; }
-        int GetY() { return _y; }
     };
 
 public:

@@ -9,7 +9,6 @@ Engine::Engine() {
     TCODConsole::initRoot(80, 50, "libtcod C++ tutorial", false);
     _player = new Actor(40, 25, '@', TCODColor::white);
     _actors.push(_player);
-    _actors.push(new Actor(60, 13, '@', TCODColor::yellow));
     _map = new Map(80, 45);
 }
 
@@ -25,22 +24,22 @@ void Engine::Update() {
     auto& coordinates = _player->_coordinates;
     switch (key.vk) {
     case TCODK_UP:
-        if (!_map->IsWall(coordinates.GetX(), coordinates.GetY() - 1)) {
+        if (!_map->IsWall(coordinates._x, coordinates._y - 1)) {
             _player->Move(TCODK_UP, 1);
         }
         break;
     case TCODK_DOWN:
-        if (!_map->IsWall(coordinates.GetX(), coordinates.GetY() + 1)) {
+        if (!_map->IsWall(coordinates._x, coordinates._y + 1)) {
             _player->Move(TCODK_DOWN, 1);
         }
         break;
     case TCODK_LEFT:
-        if (!_map->IsWall(coordinates.GetX() - 1, coordinates.GetY())) {
+        if (!_map->IsWall(coordinates._x - 1, coordinates._y)) {
             _player->Move(TCODK_LEFT, 1);
         }
         break;
     case TCODK_RIGHT:
-        if (!_map->IsWall(coordinates.GetX() + 1, coordinates.GetY())) {
+        if (!_map->IsWall(coordinates._x + 1, coordinates._y)) {
             _player->Move(TCODK_RIGHT, 1);
         }
         break;
