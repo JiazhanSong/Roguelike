@@ -1,7 +1,4 @@
 #pragma once
-#include "precompiled_header.h"
-
-class Actor;
 
 struct Tile {
     Tile() : _explored(false) {}
@@ -9,6 +6,7 @@ struct Tile {
 };
 
 class Map {
+    friend class BspListener;
 public:
     int _width, _height;
 
@@ -25,7 +23,6 @@ public:
 protected:
     TCODMap* _map;
     Tile* _tiles;
-    friend class BspListener;
 
     void Dig(int x1, int y1, int x2, int y2);
     void CreateRoom(int room_number, int x1, int y1, int x2, int y2);

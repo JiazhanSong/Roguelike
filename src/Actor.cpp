@@ -1,7 +1,4 @@
-#include "Actor.h"
-#include "Engine.h"
-#include "Map.h"
-#include <stdio.h>
+#include "precompiled_header.h"
 
 void Actor::Move(TCOD_keycode_t direction, unsigned int delta)
 {
@@ -21,7 +18,7 @@ void Actor::Render() const {
 }
 
 void Actor::Update() {
-    printf("The %s growls!\n", _name.c_str());
+    if (_ai) _ai->Update(this);
 }
 
 bool Actor::MoveOrAttack(int x_delta, int y_delta) {
@@ -34,7 +31,7 @@ bool Actor::MoveOrAttack(int x_delta, int y_delta) {
     {
         if (actor->_coordinates._x == x && actor->_coordinates._y == y)
         {
-            printf("The %s blocks your path!\n", actor->_name.c_str());
+            fmt::print("The {} blocks your path!\n", actor->_name);
             return false;
         }
     }

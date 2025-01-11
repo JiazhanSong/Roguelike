@@ -1,56 +1,47 @@
-#include "Actor.h"
-#include "Map.h"
-#include "Engine.h"
+#include "precompiled_header.h"
 
 // Global engine
-Engine kEngine;
+Engine kEngine(kDisplayWidth, kDisplayHeight);
 
-Engine::Engine() : _fovRadius(10), _gameStatus(GameStatus::STARTUP) {
-    TCODConsole::initRoot(80, 50, "Roguelike!", false);
+Engine::Engine(int _displayWidth, int _displayHeight) : _fovRadius(10), _gameStatus(GameStatus::STARTUP),
+  _displayWidth(_displayWidth), _displayHeight(_displayHeight)
+{
+    TCODConsole::initRoot(_displayWidth, _displayHeight, "Roguelike!", false);
     _player = new Actor(40, 25, '@', "player", TCODColor::white);
+    _player->_destructible = std::make_unique<Destructible>(30, 2, "your cadaver");
+    _player->_attacker = std::make_unique<Attacker>(5);
+    _player->_ai = std::make_unique<PlayerAi>();
     _actors.push(_player);
     _map = new Map(80, 45);
     _map->ComputeFov();
 }
 
-Engine::~Engine() {
+Engine::~Engine()
+{
     _actors.clearAndDelete();
     delete _map;
 }
 
-void Engine::Update() {
-    TCOD_key_t key;
+void Engine::Update()
+{
     if (_gameStatus == STARTUP) _map->ComputeFov();
     _gameStatus = IDLE;
 
-    TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL);
+    TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &_lastKey, NULL);
 
-    int dx = 0, dy = 0;
-    switch (key.vk) {
-        case TCODK_UP: dy = -1; break;
-        case TCODK_DOWN: dy = 1; break;
-        case TCODK_LEFT: dx = -1; break;
-        case TCODK_RIGHT: dx = 1; break;
-        default:break;
-    }
-
-    if (dx != 0 || dy != 0) {
-        _gameStatus = NEW_TURN;
-        if (_player->MoveOrAttack(dx, dy)) {
-            _map->ComputeFov();
-        }
-    }
+    _player->Update();
 
     if (_gameStatus == NEW_TURN) {
         for (auto actor : _actors) {
-            if (actor != _player && _map->IsInFov(actor)) {
+            if (actor != _player) {
                 actor->Update();
             }
         }
     }
 }
 
-void Engine::Render() {
+void Engine::Render()
+{
     TCODConsole::root->clear();
 
     // Draw map
@@ -61,4 +52,14 @@ void Engine::Render() {
             actor->Render();
         }
     }
+
+    // show the player's stats
+    TCODConsole::root->print(1, _displayHeight - 2, "HP : %d/%d",
+        (int)_player->_destructible->_hp, (int)_player->_destructible->_maxHp);
+}
+
+void Engine::SendToBack(Actor* actor)
+{
+    _actors.remove(actor);
+    _actors.insertBefore(actor, 0);
 }

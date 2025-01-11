@@ -1,6 +1,4 @@
-#include "Map.h"
-#include "Engine.h"
-#include "Actor.h"
+#include "precompiled_header.h"
 
 static const int ROOM_MAX_SIZE = 12;
 static const int ROOM_MIN_SIZE = 6;
@@ -110,8 +108,8 @@ bool Map::CanWalk(int x, int y) const {
     }
 
     for (auto actor : kEngine._actors) {
-        if (actor->_coordinates._x == x && actor->_coordinates._y == y) {
-            // there is an actor there. cannot walk
+        // detech collision
+        if (actor->_blocks && actor->_coordinates._x == x && actor->_coordinates._y == y) {
             return false;
         }
     }
@@ -122,13 +120,21 @@ void Map::AddMonster(int x, int y) {
     TCODRandom* rng = TCODRandom::getInstance();
     if (rng->getInt(0, 100) < 80) {
         // create an orc
-        kEngine._actors.push(new Actor(x, y, 'O', "orc",
-            TCODColor::desaturatedGreen));
+        Actor* orc = new Actor(x, y, 'O', "orc",
+            TCODColor::desaturatedGreen);
+        orc->_destructible = std::make_unique<Destructible>(10, 0, "dead orc");
+        orc->_attacker = std::make_unique<Attacker>(3);
+        orc->_ai = std::make_unique<MonsterAi>();
+        kEngine._actors.push(orc);
     }
     else {
         // create a troll
-        kEngine._actors.push(new Actor(x, y, 'T', "troll",
-            TCODColor::darkerGreen));
+        Actor* troll = new Actor(x, y, 'T', "troll",
+            TCODColor::darkerGreen);
+        troll->_destructible = std::make_unique<Destructible>(16, 1, "troll carcass");
+        troll->_attacker = std::make_unique<Attacker>(4);
+        troll->_ai = std::make_unique<MonsterAi>();
+        kEngine._actors.push(troll);
     }
 }
 

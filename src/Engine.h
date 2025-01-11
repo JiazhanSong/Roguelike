@@ -1,8 +1,7 @@
 #pragma once
-#include "precompiled_header.h"
 
-class Actor;
-class Map;
+static const int kDisplayWidth = 80;
+static const int kDisplayHeight = 50;
 
 class Engine {
 public:
@@ -14,16 +13,21 @@ public:
         DEFEAT
     };
 
+    GameStatus _gameStatus;
     TCODList<Actor*> _actors;
     Actor* _player;
     Map* _map;
-    int _fovRadius;
-    GameStatus _gameStatus;
+    TCOD_key_t _lastKey;
 
-    Engine();
+    int _fovRadius;
+    int _displayWidth;
+    int _displayHeight;
+
+    Engine(int _displayWidth, int _displayHeight);
     ~Engine();
     void Update();
     void Render();
+    void SendToBack(Actor* actor);
 };
 
 extern Engine kEngine;

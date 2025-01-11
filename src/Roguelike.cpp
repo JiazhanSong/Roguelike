@@ -1,6 +1,4 @@
-#include "Actor.h"
-#include "Map.h"
-#include "Engine.h"
+#include "precompiled_header.h"
 
 int main()
 {

@@ -6,7 +6,7 @@ project(Roguelike)
 find_package(fmt CONFIG REQUIRED)
 find_package(libtcod CONFIG REQUIRED)
 
-add_executable(Roguelike "src/Roguelike.cpp"  "src/Actor.h" "src/Actor.cpp" "src/Map.h" "src/Map.cpp" "src/Engine.h" "src/Engine.cpp")
+add_executable(Roguelike "src/Roguelike.cpp"  "src/Actor.h" "src/Actor.cpp" "src/Map.h" "src/Map.cpp" "src/Engine.h" "src/Engine.cpp" "src/Attacker.h" "src/Ai.h" "src/Destructible.h" "src/Destructible.cpp" "src/Attacker.cpp" "src/Ai.cpp")
 target_link_libraries(Roguelike PRIVATE libtcod::libtcod fmt::fmt)
 
 target_precompile_headers(Roguelike

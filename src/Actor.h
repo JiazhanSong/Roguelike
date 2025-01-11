@@ -1,6 +1,6 @@
 #pragma once
-#include "precompiled_header.h"
 
+// Base class for game actors.
 class Actor
 {
     static const int default_x = 40;
@@ -26,26 +26,16 @@ class Actor
     };
 
 public:
-    Actor(int x, int y, int ch, const TCODColor& color)
-    {
-        _coordinates = Coordinates(x, y);
-        _ch = ch;
-        _color = color;
-    }
-
-    Actor(int ch, const TCODColor& color) : Actor(default_x, default_y, ch, color) {}
-
-    Actor()
-    {
-        _coordinates = Coordinates(default_x, default_y);
-    }
-
     Actor(int x, int y, int ch, const char* name, const TCODColor& color)
     {
         _coordinates = Coordinates(x, y);
         _ch = ch;
         _color = color;
-        _name = name;
+        _name = std::string(name);
+        _blocks = true;
+        _attacker = nullptr;
+        _destructible = nullptr;
+        _ai = nullptr;
     }
 
     void Update();
@@ -58,4 +48,10 @@ public:
     int _ch; // ascii code
     TCODColor _color;
     std::string _name;
+    bool _blocks; // blocks movement
+
+    // Owned attributes, may be nullptr. Ex. Rock without movement
+    std::unique_ptr<Attacker> _attacker;
+    std::unique_ptr<Destructible> _destructible;
+    std::unique_ptr<Ai> _ai; // movement
 };
