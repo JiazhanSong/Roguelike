@@ -8,7 +8,7 @@ void Attacker::Attack(Actor* owner, Actor* target)
     {
         if (_power - target->_destructible->_defense > 0)
         {
-            auto color = owner->_name != "player" ? TCODColor::darkerRed : TCODColor::blue;
+            auto color = owner != kEngine._player ? TCODColor::darkerRed : TCODColor::blue;
             kEngine._gui->AppendMessage(color, fmt::format("{} attacks {} for {} hit-points.\n",
                 owner->_name, target->_name, _power - target->_destructible->_defense));
         }

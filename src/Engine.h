@@ -1,8 +1,5 @@
 #pragma once
 
-static const int kDisplayWidth = 80;
-static const int kDisplayHeight = 50;
-
 class Engine {
 public:
     enum GameStatus {

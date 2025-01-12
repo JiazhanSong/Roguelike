@@ -72,20 +72,20 @@ bool Map::IsExplored(int x, int y) const
 }
 
 void Map::Render() const {
-    static const TCODColor darkWall(0, 0, 100);
-    static const TCODColor darkGround(50, 50, 150);
-    static const TCODColor lightWall(130, 110, 50);
-    static const TCODColor lightGround(200, 180, 50);
+    static const TCODColor maroonWall(102, 0, 51);
+    static const TCODColor maroonGround(204, 0, 102);
+    static const TCODColor goldWall(125, 100, 45);
+    static const TCODColor goldGround(198, 180, 45);
 
     for (int x = 0; x < _width; x++) {
         for (int y = 0; y < _height; y++) {
             if (IsInFov(x, y)) {
                 TCODConsole::root->setCharBackground(x, y,
-                    IsWall(x, y) ? lightWall : lightGround);
+                    IsWall(x, y) ? goldWall : goldGround);
             }
             else if (IsExplored(x, y)) {
                 TCODConsole::root->setCharBackground(x, y,
-                    IsWall(x, y) ? darkWall : darkGround);
+                    IsWall(x, y) ? maroonWall : maroonGround);
             }
         }
     }
@@ -134,17 +134,15 @@ void Map::AddMonster(int x, int y)
     TCODRandom* rng = TCODRandom::getInstance();
     if (rng->getInt(0, 100) < 80) {
         // create an orc
-        Actor* orc = new Actor(x, y, 'O', "orc",
-            TCODColor::desaturatedGreen);
-        orc->_destructible = std::make_unique<MonsterDestructible>(10, 0, "dead orc");
+        Actor* orc = new Actor(x, y, 'O', "orc", TCODColor::desaturatedGreen);
+        orc->_destructible = std::make_unique<MonsterDestructible>(10, 0, "orc body");
         orc->_attacker = std::make_unique<Attacker>(3);
         orc->_ai = std::make_unique<MonsterAi>();
         kEngine._actors.push(orc);
     }
     else {
         // create a troll
-        Actor* troll = new Actor(x, y, 'T', "troll",
-            TCODColor::darkerGreen);
+        Actor* troll = new Actor(x, y, 'T', "troll", TCODColor::darkerGreen);
         troll->_destructible = std::make_unique<MonsterDestructible>(16, 1, "troll carcass");
         troll->_attacker = std::make_unique<Attacker>(4);
         troll->_ai = std::make_unique<MonsterAi>();
@@ -154,7 +152,7 @@ void Map::AddMonster(int x, int y)
 
 void Map::AddItem(int x, int y)
 {
-    Actor* healthPotion = new Actor(x, y, '!', "health potion", TCODColor::darkerViolet);
+    Actor* healthPotion = new Actor(x, y, '!', "Health Potion", TCODColor::darkerViolet);
     healthPotion->_blocks = false;
     healthPotion->_pickable = std::make_unique<Healer>(4);
     kEngine._actors.push(healthPotion);

@@ -1,5 +1,8 @@
 #include "precompiled_header.h"
 
+static const int kDisplayWidth = 80;
+static const int kDisplayHeight = 50;
+
 // Global engine
 Engine kEngine(kDisplayWidth, kDisplayHeight);
 
@@ -7,8 +10,8 @@ Engine::Engine(int _displayWidth, int _displayHeight) : _fovRadius(10), _gameSta
   _displayWidth(_displayWidth), _displayHeight(_displayHeight)
 {
     TCODConsole::initRoot(_displayWidth, _displayHeight, "Roguelike!", false);
-    _player = new Actor(40, 25, '@', "player", TCODColor::white);
-    _player->_destructible = std::make_unique<PlayerDestructible>(30, 2, "your cadaver");
+    _player = new Actor(40, 25, '@', "Player", TCODColor::white);
+    _player->_destructible = std::make_unique<PlayerDestructible>(30, 2, "your lifeless cadaver");
     _player->_attacker = std::make_unique<Attacker>(5);
     _player->_ai = std::make_unique<PlayerAi>();
     _player->_container = std::make_unique<Container>(26);

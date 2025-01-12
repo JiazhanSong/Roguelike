@@ -1,7 +1,6 @@
 #pragma once
 class Actor;
 
-//
 class Attacker {
 public:
     float _power;

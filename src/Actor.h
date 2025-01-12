@@ -3,9 +3,6 @@
 // Base class for game actors.
 class Actor
 {
-    static const int default_x = 40;
-    static const int default_y = 25;
-
     class Coordinates
     {
     public:
