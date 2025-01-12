@@ -43,7 +43,7 @@ bool PlayerAi::MoveOrAttack(Actor* owner, int targetx, int targety) {
         if (actor->_destructible && actor->_destructible->IsDead()
             && actor->_coordinates._x == targetx && actor->_coordinates._y == targety)
         {
-            fmt::print("There is a {}\n", actor->_name);
+            kEngine._gui->AppendMessage(TCODColor::darkerSky, fmt::format("There is a {}\n", actor->_name));
         }
     }
 

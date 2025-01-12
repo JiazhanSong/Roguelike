@@ -40,7 +40,8 @@ public:
     }
 };
 
-Map::Map(int width, int height) : _width(width), _height(height) {
+Map::Map(int width, int height) : _width(width), _height(height)
+{
     _tiles = new Tile[width * height];
     _map = new TCODMap(width, height);
 
@@ -53,16 +54,19 @@ Map::Map(int width, int height) : _width(width), _height(height) {
     bsp.traverseInvertedLevelOrder(&listener, NULL);
 }
 
-Map::~Map() {
+Map::~Map()
+{
     delete[] _tiles;
     delete _map;
 }
 
-bool Map::IsWall(int x, int y) const {
+bool Map::IsWall(int x, int y) const
+{
     return !_map->isWalkable(x, y);
 }
 
-bool Map::IsExplored(int x, int y) const {
+bool Map::IsExplored(int x, int y) const
+{
     return _tiles[x + y * _width]._explored;
 }
 
@@ -86,15 +90,22 @@ void Map::Render() const {
     }
 }
 
-bool Map::IsInFov(int x, int y) const {
-    if (_map->isInFov(x, y)) {
+bool Map::IsInFov(int x, int y) const
+{
+    if (x < 0 || x >= _width || y < 0 || y >= _height)
+    {
+        return false;
+    }
+    if (_map->isInFov(x, y))
+    {
         _tiles[x + y * _width]._explored = true;
         return true;
     }
     return false;
 }
 
-bool Map::IsInFov(Actor* actor) const {
+bool Map::IsInFov(Actor* actor) const
+{
     return IsInFov(actor->_coordinates._x, actor->_coordinates._y);
 }
 
@@ -102,7 +113,8 @@ void Map::ComputeFov() {
     _map->computeFov(kEngine._player->_coordinates._x, kEngine._player->_coordinates._y, kEngine._fovRadius);
 }
 
-bool Map::CanWalk(int x, int y) const {
+bool Map::CanWalk(int x, int y) const
+{
     if (IsWall(x, y)) {
         return false;
     }
@@ -116,13 +128,14 @@ bool Map::CanWalk(int x, int y) const {
     return true;
 }
 
-void Map::AddMonster(int x, int y) {
+void Map::AddMonster(int x, int y)
+{
     TCODRandom* rng = TCODRandom::getInstance();
     if (rng->getInt(0, 100) < 80) {
         // create an orc
         Actor* orc = new Actor(x, y, 'O', "orc",
             TCODColor::desaturatedGreen);
-        orc->_destructible = std::make_unique<Destructible>(10, 0, "dead orc");
+        orc->_destructible = std::make_unique<MonsterDestructible>(10, 0, "dead orc");
         orc->_attacker = std::make_unique<Attacker>(3);
         orc->_ai = std::make_unique<MonsterAi>();
         kEngine._actors.push(orc);
@@ -131,14 +144,15 @@ void Map::AddMonster(int x, int y) {
         // create a troll
         Actor* troll = new Actor(x, y, 'T', "troll",
             TCODColor::darkerGreen);
-        troll->_destructible = std::make_unique<Destructible>(16, 1, "troll carcass");
+        troll->_destructible = std::make_unique<MonsterDestructible>(16, 1, "troll carcass");
         troll->_attacker = std::make_unique<Attacker>(4);
         troll->_ai = std::make_unique<MonsterAi>();
         kEngine._actors.push(troll);
     }
 }
 
-void Map::Dig(int x1, int y1, int x2, int y2) {
+void Map::Dig(int x1, int y1, int x2, int y2) 
+{
     if (x2 < x1) {
         std::swap(x1, x2);
     }
@@ -152,7 +166,8 @@ void Map::Dig(int x1, int y1, int x2, int y2) {
     }
 }
 
-void Map::CreateRoom(int room_number, int x1, int y1, int x2, int y2) {
+void Map::CreateRoom(int room_number, int x1, int y1, int x2, int y2)
+{
     Dig(x1, y1, x2, y2);
 
     if (room_number == 0) {

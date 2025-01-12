@@ -30,13 +30,15 @@ void Destructible::Die(Actor* owner)
 
 void MonsterDestructible::Die(Actor* owner)
 {
-    fmt::print("{} died a gruesome and painful death.\n", owner->_name);
+    kEngine._gui->AppendMessage(TCODColor::red,
+        fmt::format("{} died a gruesome and painful death.\n", owner->_name));
     Destructible::Die(owner);
 }
 
 void PlayerDestructible::Die(Actor* owner)
 {
-    fmt::print("You died!\n");
+    kEngine._gui->AppendMessage(TCODColor::darkRed,
+        fmt::format("You died!\n"));
     Destructible::Die(owner);
     kEngine._gameStatus = Engine::DEFEAT;
 }

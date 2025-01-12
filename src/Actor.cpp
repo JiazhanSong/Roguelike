@@ -31,7 +31,7 @@ bool Actor::MoveOrAttack(int x_delta, int y_delta) {
     {
         if (actor->_coordinates._x == x && actor->_coordinates._y == y)
         {
-            fmt::print("The {} blocks your path!\n", actor->_name);
+            kEngine._gui->AppendMessage(TCODColor::amber, fmt::format("The {} blocks your path!\n", actor->_name));
             return false;
         }
     }

@@ -14,9 +14,14 @@ public:
     };
 
     GameStatus _gameStatus;
+
     TCODList<Actor*> _actors;
     Actor* _player;
-    Map* _map;
+
+    std::unique_ptr<Map> _map;
+    std::unique_ptr<Gui> _gui;
+
+    TCOD_mouse_t _mouse;
     TCOD_key_t _lastKey;
 
     int _fovRadius;

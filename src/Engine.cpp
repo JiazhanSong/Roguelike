@@ -8,18 +8,21 @@ Engine::Engine(int _displayWidth, int _displayHeight) : _fovRadius(10), _gameSta
 {
     TCODConsole::initRoot(_displayWidth, _displayHeight, "Roguelike!", false);
     _player = new Actor(40, 25, '@', "player", TCODColor::white);
-    _player->_destructible = std::make_unique<Destructible>(30, 2, "your cadaver");
+    _player->_destructible = std::make_unique<PlayerDestructible>(30, 2, "your cadaver");
     _player->_attacker = std::make_unique<Attacker>(5);
     _player->_ai = std::make_unique<PlayerAi>();
     _actors.push(_player);
-    _map = new Map(80, 45);
+    _map = std::make_unique<Map>(80, 45);
     _map->ComputeFov();
+    _gui = std::make_unique<Gui>();
+
+    _gui->AppendMessage(TCODColor::gold,
+        "Behold adventurer, the Pyramid of Ashkan!");
 }
 
 Engine::~Engine()
 {
     _actors.clearAndDelete();
-    delete _map;
 }
 
 void Engine::Update()
@@ -27,7 +30,7 @@ void Engine::Update()
     if (_gameStatus == STARTUP) _map->ComputeFov();
     _gameStatus = IDLE;
 
-    TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &_lastKey, NULL);
+    TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS | TCOD_EVENT_MOUSE, &_lastKey, &_mouse);
 
     _player->Update();
 
@@ -44,7 +47,6 @@ void Engine::Render()
 {
     TCODConsole::root->clear();
 
-    // Draw map
     _map->Render();
 
     for (auto actor : _actors) {
@@ -53,9 +55,7 @@ void Engine::Render()
         }
     }
 
-    // show the player's stats
-    TCODConsole::root->print(1, _displayHeight - 2, "HP : %d/%d",
-        (int)_player->_destructible->_hp, (int)_player->_destructible->_maxHp);
+    _gui->Render();
 }
 
 void Engine::SendToBack(Actor* actor)

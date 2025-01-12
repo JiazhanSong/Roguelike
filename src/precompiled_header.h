@@ -16,4 +16,5 @@
 #include "Attacker.h"
 #include "Actor.h"
 #include "Map.h"
+#include "Gui.h"
 #include "Engine.h"
