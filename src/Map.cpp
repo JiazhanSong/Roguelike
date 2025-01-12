@@ -3,6 +3,7 @@
 static const int ROOM_MAX_SIZE = 12;
 static const int ROOM_MIN_SIZE = 6;
 static const int MAX_ROOM_MONSTERS = 3;
+static const int MAX_ROOM_ITEMS = 2;
 
 class BspListener : public ITCODBspCallback {
 private:
@@ -47,11 +48,11 @@ Map::Map(int width, int height) : _width(width), _height(height)
 
     // Room tree
     TCODBsp bsp(0, 0, width, height);
-    bsp.splitRecursive(NULL, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
+    bsp.splitRecursive(nullptr, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
 
     // Traverse nodes and generate rooms
     BspListener listener(*this);
-    bsp.traverseInvertedLevelOrder(&listener, NULL);
+    bsp.traverseInvertedLevelOrder(&listener, nullptr);
 }
 
 Map::~Map()
@@ -151,6 +152,14 @@ void Map::AddMonster(int x, int y)
     }
 }
 
+void Map::AddItem(int x, int y)
+{
+    Actor* healthPotion = new Actor(x, y, '!', "health potion", TCODColor::darkerViolet);
+    healthPotion->_blocks = false;
+    healthPotion->_pickable = std::make_unique<Healer>(4);
+    kEngine._actors.push(healthPotion);
+}
+
 void Map::Dig(int x1, int y1, int x2, int y2) 
 {
     if (x2 < x1) {
@@ -176,6 +185,7 @@ void Map::CreateRoom(int room_number, int x1, int y1, int x2, int y2)
         kEngine._player->_coordinates._y = (y1 + y2) / 2;
     }
     else {
+        // Generate monsters
         TCODRandom* rng = TCODRandom::getInstance();
         int nbMonsters = rng->getInt(0, MAX_ROOM_MONSTERS);
         while (nbMonsters > 0) {
@@ -185,6 +195,17 @@ void Map::CreateRoom(int room_number, int x1, int y1, int x2, int y2)
                 AddMonster(x, y);
             }
             nbMonsters--;
+        }
+
+        // Generate items
+        int nbItems = rng->getInt(0, MAX_ROOM_ITEMS);
+        while (nbItems > 0) {
+            int x = rng->getInt(x1, x2);
+            int y = rng->getInt(y1, y2);
+            if (CanWalk(x, y)) {
+                AddItem(x, y);
+            }
+            nbItems--;
         }
     }
 }

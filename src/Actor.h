@@ -10,7 +10,8 @@ class Actor
     {
     public:
         friend Actor;
-        Coordinates() {
+        Coordinates()
+        {
             _x = 0;
             _y = 0;
         }
@@ -19,6 +20,11 @@ class Actor
         {
             _x = x;
             _y = y;
+        }
+
+        bool operator==(const Coordinates& other) const
+        {
+            return _x == other._x && _y == other._y;
         }
 
         int _x;
@@ -33,10 +39,8 @@ public:
         _color = color;
         _name = std::string(name);
         _blocks = true;
-        _attacker = nullptr;
-        _destructible = nullptr;
-        _ai = nullptr;
     }
+    ~Actor() {}
 
     void Update();
     bool MoveOrAttack(int x_delta, int y_delta);
@@ -51,7 +55,9 @@ public:
     bool _blocks; // blocks movement
 
     // Owned attributes, may be nullptr. Ex. Rock without movement
-    std::unique_ptr<Attacker> _attacker;
-    std::unique_ptr<Destructible> _destructible;
-    std::unique_ptr<Ai> _ai; // movement
+    std::unique_ptr<Attacker> _attacker = nullptr;
+    std::unique_ptr<Destructible> _destructible = nullptr;
+    std::unique_ptr<Pickable> _pickable = nullptr; // Able to be picked up by player
+    std::unique_ptr<Ai> _ai = nullptr; // movement
+    std::unique_ptr<Container> _container = nullptr;
 };

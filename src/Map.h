@@ -20,6 +20,7 @@ public:
     void Render() const;
     bool CanWalk(int x, int y) const;
     void AddMonster(int x, int y);
+    void AddItem(int x, int y);
 protected:
     TCODMap* _map;
     Tile* _tiles;

@@ -13,7 +13,9 @@
 
 #include "Ai.h"
 #include "Destructible.h"
+#include "Pickable.h"
 #include "Attacker.h"
+#include "Container.h"
 #include "Actor.h"
 #include "Map.h"
 #include "Gui.h"

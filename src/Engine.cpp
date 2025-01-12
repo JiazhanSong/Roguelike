@@ -11,6 +11,7 @@ Engine::Engine(int _displayWidth, int _displayHeight) : _fovRadius(10), _gameSta
     _player->_destructible = std::make_unique<PlayerDestructible>(30, 2, "your cadaver");
     _player->_attacker = std::make_unique<Attacker>(5);
     _player->_ai = std::make_unique<PlayerAi>();
+    _player->_container = std::make_unique<Container>(26);
     _actors.push(_player);
     _map = std::make_unique<Map>(80, 45);
     _map->ComputeFov();

@@ -42,3 +42,10 @@ void PlayerDestructible::Die(Actor* owner)
     Destructible::Die(owner);
     kEngine._gameStatus = Engine::DEFEAT;
 }
+
+float Destructible::Heal(float amount) {
+    _hp = _hp + amount;
+    auto amount_healed = _hp > _maxHp ? (amount - (_hp - _maxHp)) : amount;
+    _hp = std::min(_maxHp, _hp);
+    return amount_healed;
+}

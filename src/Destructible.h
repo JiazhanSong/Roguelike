@@ -9,9 +9,11 @@ public:
     std::string _corpseName; // the actor's name once dead
 
     Destructible(float maxHp, float defense, const char* corpseName);
+    virtual ~Destructible() {};
     bool IsDead() { return _hp <= 0; }
     float TakeDamage(Actor* owner, float damage);
     virtual void Die(Actor* owner);
+    float Heal(float amount);
 };
 
 class MonsterDestructible : public Destructible {

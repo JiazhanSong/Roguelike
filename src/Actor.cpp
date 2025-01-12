@@ -12,16 +12,19 @@ void Actor::Move(TCOD_keycode_t direction, unsigned int delta)
     }
 }
 
-void Actor::Render() const {
+void Actor::Render() const
+{
     TCODConsole::root->setChar(_coordinates._x, _coordinates._y, _ch);
     TCODConsole::root->setCharForeground(_coordinates._x, _coordinates._y, _color);
 }
 
-void Actor::Update() {
+void Actor::Update()
+{
     if (_ai) _ai->Update(this);
 }
 
-bool Actor::MoveOrAttack(int x_delta, int y_delta) {
+bool Actor::MoveOrAttack(int x_delta, int y_delta)
+{
     int x = _coordinates._x + x_delta;
     int y = _coordinates._y + y_delta;
 
