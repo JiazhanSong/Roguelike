@@ -3,4 +3,5 @@ Prerequisites:
 - cmake 3.16 or higher
 - compiler supporting C++20
 
-![image](https://github.com/user-attachments/assets/18e05bd1-bb59-41cd-922a-87b5e93ffc57)
+![image](https://github.com/user-attachments/assets/fbbf5ba6-424c-4d57-8381-d3b075ea9b70)
+
