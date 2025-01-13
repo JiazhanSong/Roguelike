@@ -17,6 +17,18 @@ float Destructible::TakeDamage(Actor* owner, float damage)
     return calculated_damage;
 }
 
+float Destructible::TakePercentageDamage(Actor* owner, float percentage)
+{
+    float calculated_damage = std::ceil(_hp * percentage / 100.0f);
+
+    _hp -= calculated_damage;
+    if (_hp <= 0) {
+        Die(owner);
+    }
+
+    return calculated_damage;
+}
+
 void Destructible::Die(Actor* owner)
 {
     owner->_ch = '%';

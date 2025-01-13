@@ -43,3 +43,9 @@ bool Actor::MoveOrAttack(int x_delta, int y_delta)
     this->_coordinates._y = y;
     return true;
 }
+
+float Actor::GetDistance(int cx, int cy) const {
+    int dx = _coordinates._x - cx;
+    int dy = _coordinates._y - cy;
+    return sqrt(dx * dx + dy * dy);
+}

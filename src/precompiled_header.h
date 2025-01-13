@@ -8,6 +8,8 @@
 #include <string>
 #include <algorithm>
 #include <memory>
+#include <cmath>
+#include <limits>
 
 #include "libtcod.hpp"
 

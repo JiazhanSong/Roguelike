@@ -41,9 +41,9 @@ public:
 
     void Update();
     bool MoveOrAttack(int x_delta, int y_delta);
-
     void Move(TCOD_keycode_t direction, unsigned int delta);
     void Render() const;
+    float GetDistance(int cx, int cy) const;
 
     Coordinates _coordinates;
     int _ch; // ascii code
@@ -51,7 +51,7 @@ public:
     std::string _name;
     bool _blocks; // blocks movement
 
-    // Owned attributes, may be nullptr. Ex. Rock without movement
+    // Owned attributes, may be nullptr. Avoiding inheritance for flexibility.
     std::unique_ptr<Attacker> _attacker = nullptr;
     std::unique_ptr<Destructible> _destructible = nullptr;
     std::unique_ptr<Pickable> _pickable = nullptr; // Able to be picked up by player

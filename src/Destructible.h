@@ -12,6 +12,7 @@ public:
     virtual ~Destructible() {};
     bool IsDead() { return _hp <= 0; }
     float TakeDamage(Actor* owner, float damage);
+    float TakePercentageDamage(Actor* owner, float percentage);
     virtual void Die(Actor* owner);
     float Heal(float amount);
 };

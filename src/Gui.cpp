@@ -38,7 +38,7 @@ void Gui::AppendMessage(const TCODColor& color, const std::string message) {
             delete toRemove;
         }
 
-        Message* msg = new Message(color, message);
+        Message* msg = new Message(color, line);
         _log.push(msg);
     }
 }

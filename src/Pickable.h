@@ -16,3 +16,17 @@ public:
     Healer(float amount);
     bool Use(Actor* owner, Actor* wearer);
 };
+
+class LightningBolt : public Pickable {
+public:
+    float _range, _damage;
+    LightningBolt(float range, float damage);
+    bool Use(Actor* owner, Actor* wearer);
+};
+
+class RingOfWeakness : public Pickable {
+public:
+    float _range, _percentageDamage;
+    RingOfWeakness(float range, float percentage_damage);
+    bool Use(Actor* owner, Actor* wearer);
+};

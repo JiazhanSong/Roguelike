@@ -30,6 +30,7 @@ public:
     void Update();
     void Render();
     void SendToBack(Actor* actor);
+    Actor* GetClosestMonster(int x, int y, float range) const;
 };
 
 extern Engine kEngine;

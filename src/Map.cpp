@@ -152,10 +152,28 @@ void Map::AddMonster(int x, int y)
 
 void Map::AddItem(int x, int y)
 {
-    Actor* healthPotion = new Actor(x, y, '!', "Health Potion", TCODColor::darkerViolet);
-    healthPotion->_blocks = false;
-    healthPotion->_pickable = std::make_unique<Healer>(4);
-    kEngine._actors.push(healthPotion);
+    TCODRandom* rng = TCODRandom::getInstance();
+    int dice = rng->getInt(0, 100);
+    if (dice < 50) {
+        Actor* healthPotion = new Actor(x, y, '!', "Health Potion", TCODColor::darkerViolet);
+        healthPotion->_blocks = false;
+        healthPotion->_pickable = std::make_unique<Healer>(4);
+        kEngine._actors.push(healthPotion);
+    }
+    else if (dice < 75)
+    {
+        Actor* scrollOfLightningBolt = new Actor(x, y, '#', "Scroll of Thunder", TCODColor::lightYellow);
+        scrollOfLightningBolt->_blocks = false;
+        scrollOfLightningBolt->_pickable = std::make_unique<LightningBolt>(5, 20);
+        kEngine._actors.push(scrollOfLightningBolt);
+    }
+    else
+    {
+        Actor* ringOfWeakness = new Actor(x, y, 'w', "Ring of Weakness", TCODColor::black);
+        ringOfWeakness->_blocks = false;
+        ringOfWeakness->_pickable = std::make_unique<RingOfWeakness>(3, 50);
+        kEngine._actors.push(ringOfWeakness);
+    }
 }
 
 void Map::Dig(int x1, int y1, int x2, int y2) 
