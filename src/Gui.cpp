@@ -63,14 +63,12 @@ void Gui::Render() {
     }
 
     // draw the message log, iterate in reverse for top-down
-    int y = 1;
     float fadeRatio = 1.0f;
     for (Message** it = (_log.end() - 1); it >= _log.begin(); it--)
     {
         Message* message = *it;
         _console->setDefaultForeground(message->_color * fadeRatio);
-        _console->print(MSG_X, y, message->_message.c_str());
-        y++;
+        _console->print(MSG_X, _log.end() - it, message->_message.c_str());
 
        fadeRatio = std::max(0.0f, fadeRatio - 0.2f);
     }

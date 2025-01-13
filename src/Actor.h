@@ -6,26 +6,16 @@ class Actor
     class Coordinates
     {
     public:
-        friend Actor;
-        Coordinates()
-        {
-            _x = 0;
-            _y = 0;
-        }
-
-        Coordinates(int x, int y)
-        {
-            _x = x;
-            _y = y;
-        }
+        Coordinates() {}
+        Coordinates(int x, int y) : _x(x), _y(y) {}
 
         bool operator==(const Coordinates& other) const
         {
             return _x == other._x && _y == other._y;
         }
 
-        int _x;
-        int _y;
+        int _x = 0;
+        int _y = 0;
     };
 
 public:
