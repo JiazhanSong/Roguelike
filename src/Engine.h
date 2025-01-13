@@ -7,7 +7,8 @@ public:
         IDLE,
         NEW_TURN,
         VICTORY,
-        DEFEAT
+        DEFEAT,
+        EXIT
     };
 
     GameStatus _gameStatus;

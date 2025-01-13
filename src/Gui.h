@@ -6,6 +6,7 @@ public:
     ~Gui();
     void AppendMessage(const TCODColor& color, const std::string message);
     void Render();
+    void RenderVictory();
 
 private:
     struct Message {

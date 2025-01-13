@@ -4,6 +4,8 @@ static const int PANEL_HEIGHT = 7;
 static const int BAR_WIDTH = 20;
 static const int MSG_HEIGHT = PANEL_HEIGHT - 1;
 static const int MSG_X = BAR_WIDTH + 2;
+static const int VICTORY_MSG_X = 5;
+static const int VICTORY_MSG_Y = PANEL_HEIGHT / 2;
 
 Gui::Gui()
 {
@@ -65,6 +67,20 @@ void Gui::Render() {
     }
 
     RenderMouseLook();
+
+    // copy GUI into root console
+    TCODConsole::blit(_console.get(), 0, 0, kEngine._displayWidth, PANEL_HEIGHT,
+        TCODConsole::root, 0, kEngine._displayHeight - PANEL_HEIGHT);
+}
+
+void Gui::RenderVictory() {
+    _console->setDefaultBackground(TCODColor::gold);
+    _console->clear();
+
+    std::string victoryMessage = "You have cleared the dundgeon, hurrah! Your reward: 1 Bitcoin";
+
+    _console->setDefaultForeground(TCODColor::black);
+    _console->print(VICTORY_MSG_X, 1, victoryMessage.c_str());
 
     // copy GUI into root console
     TCODConsole::blit(_console.get(), 0, 0, kEngine._displayWidth, PANEL_HEIGHT,

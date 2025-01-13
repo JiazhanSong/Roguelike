@@ -10,6 +10,7 @@ Engine::Engine(int _displayWidth, int _displayHeight) : _fovRadius(10), _gameSta
   _displayWidth(_displayWidth), _displayHeight(_displayHeight)
 {
     TCODConsole::initRoot(_displayWidth, _displayHeight, "Roguelike!", false);
+    Init();
 }
 
 Engine::~Engine()
@@ -32,18 +33,34 @@ void Engine::Init()
 void Engine::Update()
 {
     if (_gameStatus == STARTUP) _map->ComputeFov();
-    _gameStatus = IDLE;
+    if (_gameStatus != GameStatus::VICTORY) _gameStatus = GameStatus::IDLE;
 
     TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS | TCOD_EVENT_MOUSE, &_lastKey, &_mouse);
 
+    if (_lastKey.vk == TCODK_ESCAPE)
+    {
+        kEngine._gameStatus = GameStatus::EXIT;
+        return;
+    }
+
     _player->Update();
 
-    if (_gameStatus == NEW_TURN) {
-        for (auto actor : _actors) {
-            if (actor != _player) {
+    if (_gameStatus == NEW_TURN)
+    {
+        bool victorious = true;
+        for (auto actor : _actors)
+        {
+            if (actor != _player)
+            {
                 actor->Update();
+                if (actor->_destructible && !actor->_destructible->IsDead())
+                {
+                    victorious = false;
+                }
             }
         }
+
+        if (victorious) kEngine._gameStatus = GameStatus::VICTORY;
     }
 }
 
@@ -53,13 +70,22 @@ void Engine::Render()
 
     _map->Render();
 
-    for (auto actor : _actors) {
-        if (_map->IsInFov(actor->_coordinates._x, actor->_coordinates._y)) {
+    for (auto actor : _actors)
+    {
+        if (_map->IsInFov(actor->_coordinates._x, actor->_coordinates._y))
+        {
             actor->Render();
         }
     }
 
-    _gui->Render();
+    if (kEngine._gameStatus == Engine::GameStatus::VICTORY)
+    {
+        _gui->RenderVictory();
+    }
+    else
+    {
+        _gui->Render();
+    }
 }
 
 void Engine::SendToBack(Actor* actor)
@@ -68,7 +94,8 @@ void Engine::SendToBack(Actor* actor)
     _actors.insertBefore(actor, 0);
 }
 
-Actor* Engine::GetClosestMonster(int x, int y, float range) const {
+Actor* Engine::GetClosestMonster(int x, int y, float range) const
+{
     Actor* closest = nullptr;
     float bestDistance = std::numeric_limits<float>::max();
 

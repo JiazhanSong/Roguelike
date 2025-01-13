@@ -10,12 +10,15 @@ void PlayerAi::Update(Actor* owner)
     int dx = 0, dy = 0;
     switch (kEngine._lastKey.vk)
     {
-    case TCODK_UP: dy = -1; break;
-    case TCODK_DOWN: dy = 1; break;
-    case TCODK_LEFT: dx = -1; break;
-    case TCODK_RIGHT: dx = 1; break;
-    case TCODK_CHAR: HandleActionKey(owner, kEngine._lastKey.c); break;
-    default: break;
+        case TCODK_UP: dy = -1; break;
+        case TCODK_DOWN: dy = 1; break;
+        case TCODK_LEFT: dx = -1; break;
+        case TCODK_RIGHT: dx = 1; break;
+        case TCODK_CHAR:
+        {
+            HandleActionKey(owner, kEngine._lastKey.c); break;
+        }
+        default: break;
     }
 
     if (dx != 0 || dy != 0)
@@ -67,8 +70,10 @@ void PlayerAi::HandleActionKey(Actor* owner, int ascii) {
             actor->_item->Use(actor, owner);
             kEngine._gameStatus = Engine::NEW_TURN;
         }
+        break;
     }
-    break;
+    default:
+        break;
     }
 }
 
