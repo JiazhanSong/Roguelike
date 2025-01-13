@@ -58,4 +58,5 @@ public:
     std::unique_ptr<Item> _item = nullptr; // able to be picked up by player
     std::unique_ptr<Ai> _ai = nullptr; // movement
     std::unique_ptr<Container> _container = nullptr;
+    std::unique_ptr<Experience> _experience = nullptr;
 };

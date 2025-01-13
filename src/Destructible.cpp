@@ -45,6 +45,7 @@ void MonsterDestructible::Die(Actor* owner)
     kEngine._gui->AppendMessage(TCODColor::red,
         fmt::format("{} died a gruesome and painful death.\n", owner->_name));
     Destructible::Die(owner);
+    kEngine._player->_experience->Gain(_experience);
 }
 
 void PlayerDestructible::Die(Actor* owner)

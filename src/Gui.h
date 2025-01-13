@@ -19,7 +19,8 @@ private:
     TCODList<Message*> _log;
     std::unique_ptr<TCODConsole> _console;
 
-    void RenderBar(int x, int y, int width, const char* name, float value, float maxValue,
+    void RenderBar(int x, int y, int width, std::string name, float value, float maxValue,
         const TCODColor& barColor, const TCODColor& backColor);
+    void RenderStatusText(int x, int y, int width, std::string text, const TCODColor& backColor);
     void RenderMouseLook();
 };

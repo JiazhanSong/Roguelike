@@ -5,6 +5,7 @@
 #include <fmt/format.h>
 #include <stdio.h>
 #include <vector>
+#include <array>
 #include <string>
 #include <algorithm>
 #include <memory>
@@ -13,6 +14,7 @@
 
 #include "libtcod.hpp"
 
+#include "Experience.h"
 #include "Ai.h"
 #include "Destructible.h"
 #include "Item.h"

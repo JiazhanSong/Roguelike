@@ -7,6 +7,7 @@ Actor* Actor::InitPlayer()
     player->_attacker = std::make_unique<Attacker>(5);
     player->_ai = std::make_unique<PlayerAi>();
     player->_container = std::make_unique<Container>(26);
+    player->_experience = std::make_unique<PlayerExperience>(player);
     return player;
 }
 

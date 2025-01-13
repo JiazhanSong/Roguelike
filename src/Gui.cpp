@@ -49,9 +49,18 @@ void Gui::Render() {
     _console->setDefaultBackground(TCODColor::black);
     _console->clear();
 
-    // draw gui
-    RenderBar(1, 1, BAR_WIDTH, "HP", kEngine._player->_destructible->_hp,
-        kEngine._player->_destructible->_maxHp, TCODColor::lightRed, TCODColor::darkerRed);
+    // draw leftside status bars
+    {
+        RenderBar(1, 1, BAR_WIDTH, "HP", kEngine._player->_destructible->_hp,
+            kEngine._player->_destructible->_maxHp, TCODColor::lightRed, TCODColor::darkerRed);
+
+        auto& exp = kEngine._player->_experience;
+        RenderBar(1, 2, BAR_WIDTH, "EXP", exp->_exp, exp->GetNextExperienceThreshold(),
+            TCODColor::amber, TCODColor::darkAmber);
+
+        std::string statusText = fmt::format("LV({}) ATK({})", exp->GetLevel(), kEngine._player->_attacker->_power);
+        RenderStatusText(1, 3, BAR_WIDTH, statusText, TCODColor::darkerBlue);
+    }
 
     // draw the message log, iterate in reverse for top-down
     int y = 1;
@@ -87,7 +96,7 @@ void Gui::RenderVictory() {
         TCODConsole::root, 0, kEngine._displayHeight - PANEL_HEIGHT);
 }
 
-void Gui::RenderBar(int x, int y, int width, const char* name, float value, float maxValue,
+void Gui::RenderBar(int x, int y, int width, std::string name, float value, float maxValue,
     const TCODColor & barColor, const TCODColor & backColor)
 {
     // fill background
@@ -100,9 +109,21 @@ void Gui::RenderBar(int x, int y, int width, const char* name, float value, floa
         _console->setDefaultBackground(barColor);
         _console->rect(x, y, barWidth, 1, false, TCOD_BKGND_SET);
     }
+
+    std::string formattedText = fmt::format("{} : {}/{}", name, value, maxValue);
+
     // print text on top of the bar
     _console->setDefaultForeground(TCODColor::white);
-    _console->printEx(x + width / 2, y, TCOD_BKGND_NONE, TCOD_CENTER, "%s : %g/%g", name, value, maxValue);
+    _console->printEx(x + width / 2, y, TCOD_BKGND_NONE, TCOD_CENTER, formattedText.c_str());
+}
+
+void Gui::RenderStatusText(int x, int y, int width, std::string text, const TCODColor& backColor)
+{
+    _console->setDefaultBackground(backColor);
+    _console->rect(x, y, width, 1, false, TCOD_BKGND_SET);
+
+    _console->setDefaultForeground(TCODColor::white);
+    _console->printEx(x + width / 2, y, TCOD_BKGND_NONE, TCOD_CENTER, text.c_str());
 }
 
 void Gui::RenderMouseLook() {

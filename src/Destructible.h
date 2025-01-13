@@ -19,9 +19,12 @@ public:
 
 class MonsterDestructible : public Destructible {
 public:
-    MonsterDestructible(float maxHp, float defense, const char* corpseName) :
+    float _experience;
+
+    MonsterDestructible(float maxHp, float defense, const char* corpseName, float experience) :
         Destructible(maxHp, defense, corpseName)
     {
+        _experience = experience;
     }
 
     void Die(Actor* owner);

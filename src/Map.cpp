@@ -135,7 +135,7 @@ void Map::AddMonster(int x, int y)
     if (rng->getInt(0, 100) < 80) {
         // create an orc
         Actor* orc = new Actor(x, y, 'O', "orc", TCODColor::desaturatedGreen);
-        orc->_destructible = std::make_unique<MonsterDestructible>(10, 0, "orc body");
+        orc->_destructible = std::make_unique<MonsterDestructible>(10, 0, "orc body", 1);
         orc->_attacker = std::make_unique<Attacker>(3);
         orc->_ai = std::make_unique<MonsterAi>();
         kEngine._actors.push(orc);
@@ -143,7 +143,7 @@ void Map::AddMonster(int x, int y)
     else {
         // create a troll
         Actor* troll = new Actor(x, y, 'T', "troll", TCODColor::darkerGreen);
-        troll->_destructible = std::make_unique<MonsterDestructible>(16, 1, "troll carcass");
+        troll->_destructible = std::make_unique<MonsterDestructible>(16, 1, "troll carcass", 2);
         troll->_attacker = std::make_unique<Attacker>(4);
         troll->_ai = std::make_unique<MonsterAi>();
         kEngine._actors.push(troll);
