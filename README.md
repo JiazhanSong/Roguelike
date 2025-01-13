@@ -1,9 +1,12 @@
-Prerequisites:
+## Description
+Mini roguelike built using [libtcod](https://github.com/libtcod/libtcod).
+
+## Prerequisites:
 - vcpkg
 - cmake 3.16 or higher
 - compiler supporting C++20
 
-Things to add:
+## Things to add:
 - Game menu
 - Data serialization and persistence
 - More levels
