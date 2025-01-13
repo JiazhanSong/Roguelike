@@ -3,5 +3,12 @@ Prerequisites:
 - cmake 3.16 or higher
 - compiler supporting C++20
 
-![image](https://github.com/user-attachments/assets/fbbf5ba6-424c-4d57-8381-d3b075ea9b70)
+Things to add:
+- Game menu
+- Data serialization and persistence
+- More levels
+
+![image](https://github.com/user-attachments/assets/c6fba1a8-1a30-43fc-9c74-790f8669c9b9)
+
+
 
