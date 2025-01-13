@@ -1,6 +1,6 @@
 #include "precompiled_header.h"
 
-bool Pickable::Pick(Actor* owner, Actor* wearer)
+bool Item::Pick(Actor* owner, Actor* wearer)
 {
     if (wearer->_container && wearer->_container->Add(owner))
     {
@@ -10,7 +10,7 @@ bool Pickable::Pick(Actor* owner, Actor* wearer)
     return false;
 }
 
-bool Pickable::Use(Actor* owner, Actor* wearer)
+bool Item::Use(Actor* owner, Actor* wearer)
 {
     if (wearer->_container)
     {
@@ -29,7 +29,7 @@ bool Healer::Use(Actor* owner, Actor* wearer)
 {
     if (wearer->_destructible && wearer->_destructible->Heal(_amount) > 0)
     {
-        return Pickable::Use(owner, wearer);
+        return Item::Use(owner, wearer);
     }
     return false;
 }
@@ -52,7 +52,7 @@ bool LightningBolt::Use(Actor* owner, Actor* wearer)
         closestMonster->_name, _damage));
     closestMonster->_destructible->TakeDamage(closestMonster, _damage);
 
-    return Pickable::Use(owner, wearer);
+    return Item::Use(owner, wearer);
 }
 
 RingOfWeakness::RingOfWeakness(float range, float percentageDamage) : _range(range), _percentageDamage(percentageDamage)
@@ -75,5 +75,5 @@ bool RingOfWeakness::Use(Actor* owner, Actor* wearer)
         "The Ring of Weakness cripples {}!\nThe damage is {} hit points.",
         monsterName, damage));
 
-    return Pickable::Use(owner, wearer);
+    return Item::Use(owner, wearer);
 }

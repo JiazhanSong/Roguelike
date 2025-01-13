@@ -1,5 +1,14 @@
 #include "precompiled_header.h"
 
+Actor* Actor::InitPlayer()
+{
+    auto player = new Actor(40, 25, '@', "Player", TCODColor::white);
+    player->_destructible = std::make_unique<PlayerDestructible>(30, 2, "your lifeless cadaver");
+    player->_attacker = std::make_unique<Attacker>(5);
+    player->_ai = std::make_unique<PlayerAi>();
+    player->_container = std::make_unique<Container>(26);
+}
+
 void Actor::Move(TCOD_keycode_t direction, unsigned int delta)
 {
     switch (direction)

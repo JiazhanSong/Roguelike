@@ -37,9 +37,9 @@ void PlayerAi::HandleActionKey(Actor* owner, int ascii) {
         for (Actor** iterator = kEngine._actors.begin(); iterator != kEngine._actors.end(); iterator++)
         {
             Actor* actor = *iterator;
-            if (actor->_pickable && actor->_coordinates == owner->_coordinates)
+            if (actor->_item && actor->_coordinates == owner->_coordinates)
             {
-                if (actor->_pickable->Pick(actor, owner))
+                if (actor->_item->Pick(actor, owner))
                 {
                     found = true;
                     kEngine._gui->AppendMessage(TCODColor::lightGrey, fmt::format("You pick up the {}.", actor->_name));
@@ -64,7 +64,7 @@ void PlayerAi::HandleActionKey(Actor* owner, int ascii) {
         Actor* actor = SelectFromInventory(owner);
         if (actor)
         {
-            actor->_pickable->Use(actor, owner);
+            actor->_item->Use(actor, owner);
             kEngine._gameStatus = Engine::NEW_TURN;
         }
     }
@@ -129,7 +129,7 @@ bool PlayerAi::MoveOrAttack(Actor* owner, int targetx, int targety) {
     for (auto actor : kEngine._actors)
     {
         bool isCorpse = actor->_destructible && actor->_destructible->IsDead();
-        bool isItem = actor->_pickable != nullptr;
+        bool isItem = actor->_item != nullptr;
 
         if ((isCorpse || isItem) && actor->_coordinates._x == targetx && actor->_coordinates._y == targety)
         {

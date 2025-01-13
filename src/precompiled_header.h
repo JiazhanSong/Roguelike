@@ -15,7 +15,7 @@
 
 #include "Ai.h"
 #include "Destructible.h"
-#include "Pickable.h"
+#include "Item.h"
 #include "Attacker.h"
 #include "Container.h"
 #include "Actor.h"

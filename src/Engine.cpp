@@ -10,23 +10,23 @@ Engine::Engine(int _displayWidth, int _displayHeight) : _fovRadius(10), _gameSta
   _displayWidth(_displayWidth), _displayHeight(_displayHeight)
 {
     TCODConsole::initRoot(_displayWidth, _displayHeight, "Roguelike!", false);
-    _player = new Actor(40, 25, '@', "Player", TCODColor::white);
-    _player->_destructible = std::make_unique<PlayerDestructible>(30, 2, "your lifeless cadaver");
-    _player->_attacker = std::make_unique<Attacker>(5);
-    _player->_ai = std::make_unique<PlayerAi>();
-    _player->_container = std::make_unique<Container>(26);
-    _actors.push(_player);
-    _map = std::make_unique<Map>(80, 45);
-    _map->ComputeFov();
-    _gui = std::make_unique<Gui>();
-
-    _gui->AppendMessage(TCODColor::gold,
-        "Behold adventurer, the Pyramid of Ashkan!");
 }
 
 Engine::~Engine()
 {
     _actors.clearAndDelete();
+}
+
+void Engine::Init()
+{
+    _player = Actor::InitPlayer();
+    _actors.push(_player);
+
+    _map = std::make_unique<Map>(80, 45);
+    _map->ComputeFov();
+
+    _gui = std::make_unique<Gui>();
+    _gui->AppendMessage(TCODColor::gold, "Behold adventurer, the Pyramid of Ashkan!");
 }
 
 void Engine::Update()
@@ -69,7 +69,7 @@ void Engine::SendToBack(Actor* actor)
 }
 
 Actor* Engine::GetClosestMonster(int x, int y, float range) const {
-    Actor* closest = NULL;
+    Actor* closest = nullptr;
     float bestDistance = std::numeric_limits<float>::max();
 
     for (auto actor : _actors)

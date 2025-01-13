@@ -39,6 +39,7 @@ public:
     }
     ~Actor() {}
 
+    static Actor* InitPlayer();
     void Update();
     bool MoveOrAttack(int x_delta, int y_delta);
     void Move(TCOD_keycode_t direction, unsigned int delta);
@@ -54,7 +55,7 @@ public:
     // Owned attributes, may be nullptr. Avoiding inheritance for flexibility.
     std::unique_ptr<Attacker> _attacker = nullptr;
     std::unique_ptr<Destructible> _destructible = nullptr;
-    std::unique_ptr<Pickable> _pickable = nullptr; // Able to be picked up by player
+    std::unique_ptr<Item> _item = nullptr; // able to be picked up by player
     std::unique_ptr<Ai> _ai = nullptr; // movement
     std::unique_ptr<Container> _container = nullptr;
 };

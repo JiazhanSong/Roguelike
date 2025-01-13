@@ -27,6 +27,7 @@ public:
 
     Engine(int _displayWidth, int _displayHeight);
     ~Engine();
+    void Init();
     void Update();
     void Render();
     void SendToBack(Actor* actor);
